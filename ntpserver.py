@@ -187,9 +187,9 @@ class NTPPacket:
                 self.orig_timestamp_high,
                 self.orig_timestamp_low,
                 _to_int(self.recv_timestamp),
-                _to_frac(self.recv_timestamp),
+                _to_frac(self.recv_timestamp, n=self.precision),
                 _to_int(self.tx_timestamp),
-                _to_frac(self.tx_timestamp))
+                _to_frac(self.tx_timestamp, n=self.precision))
         except struct.error:
             raise NTPException("Invalid NTP packet fields.")
         return packed
@@ -275,8 +275,8 @@ class WorkThread(threading.Thread):
                 sendPacket = NTPPacket(version=3,mode=4)
                 sendPacket.stratum = 2
                 sendPacket.poll = 10
+                sendPacket.precision = 0
                 '''
-                sendPacket.precision = 0xfa
                 sendPacket.root_delay = 0x0bfa
                 sendPacket.root_dispersion = 0x0aa7
                 sendPacket.ref_id = 0x808a8c2c
